@@ -1,0 +1,19 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - apt install -y libdist-zilla-perl libdist-zilla-plugins-cjm-perl libterm-ui-perl
+      - apt install -y cpanminus
+      - cpanm Dist::Zilla::Plugin::Inject
+      - cpanm CPAN::Mini::Inject::Remote
+      - cpanm Test::Compile
+      - cpanm File::Find::Rule
+      - export PERL_CPANM_OPT="--mirror http://cpan.metacpan.org --mirror http://34.243.4.148:9000"
+      - dzil install
+  build:
+    commands:
+      - touch ~/.mcpani_remote
+      - echo "remote_server:http://34.243.4.148:9000/" > ~/.mcpani_remote
+      - sed -i 's/http:/ http:/' ~/.mcpani_remote
+      - dzil release
